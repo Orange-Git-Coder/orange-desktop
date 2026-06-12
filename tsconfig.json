@@ -20,6 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    /* Deno */
+    "types": ["vite/client"],
+
     /* Path Alias */
     "paths": {
       "@/*": ["./src/*"]

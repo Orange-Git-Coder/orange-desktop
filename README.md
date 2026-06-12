@@ -13,7 +13,7 @@
 | 路由 | Vue Router 5 | 懒加载路由 |
 | 样式 | SCSS | 变量 + 暗黑模式 |
 | HTTP | Axios | 请求/响应拦截器 |
-| 包管理 | pnpm | 快速、节省磁盘 |
+| 运行时 | Deno 2 | 零配置 TypeScript，原生 npm 兼容 |
 
 ## 项目结构
 
@@ -34,6 +34,10 @@ orange-desktop/
 │       │   ├── crypto.rs          #   加密工具（可选）
 │       │   ├── fs.rs              #   文件工具（可选）
 │       │   └── string.rs          #   字符串工具（核心）
+│       ├── tray/                  #   托盘图标
+│       │   ├── mod.rs             #     主入口
+│       │   ├── menu.rs            #     菜单构建
+│       │   └── events.rs          #     事件处理
 │       └── lib.rs                 #   入口点
 │
 ├── src/                           # 💚 Vue 3 前端
@@ -59,16 +63,17 @@ orange-desktop/
 │       ├── home/                  #   首页
 │       └── about/                 #   关于页
 │
+├── deno.json                      # Deno 配置 & 任务
+├── package.json                   # npm 依赖声明 (Deno 原生兼容)
 ├── public/                        # 静态资源
 ├── .env.example                   # 环境变量示例
 ├── REMOVE_ME.md                   # 模块删除指南
-└── package.json
+└── README.md
 ```
 
 ## 环境要求
 
-- [Node.js](https://nodejs.org/) >= 18
-- [pnpm](https://pnpm.io/installation)
+- [Deno](https://deno.com/) >= 2.0
 - [Rust](https://www.rust-lang.org/tools/install) 工具链
 
 ## 快速开始
@@ -76,13 +81,15 @@ orange-desktop/
 ### 1. 安装依赖
 
 ```bash
-pnpm install
+deno install
 ```
+
+Deno 会根据 `package.json` 自动解析并安装所有 npm 依赖。
 
 ### 2. 开发模式
 
 ```bash
-pnpm tauri dev
+deno task tauri dev
 ```
 
 同时启动 Vite 开发服务器（前端热更新）和 Tauri 桌面窗口。
@@ -90,10 +97,20 @@ pnpm tauri dev
 ### 3. 生产构建
 
 ```bash
-pnpm tauri build
+deno task tauri build
 ```
 
 构建产物位于 `src-tauri/target/release/bundle/`。
+
+## 可用任务
+
+| 命令 | 说明 |
+|------|------|
+| `deno task dev` | 启动 Vite 开发服务器 |
+| `deno task build` | 类型检查 + 生产构建 |
+| `deno task preview` | 预览生产构建 |
+| `deno task tauri dev` | Tauri 开发模式 |
+| `deno task tauri build` | Tauri 生产构建 |
 
 ## 模块管理
 
@@ -127,6 +144,7 @@ pnpm tauri build
 
 - [VS Code](https://code.visualstudio.com/)
   - [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+  - [Deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
   - [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode)
   - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
