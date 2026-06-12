@@ -63,11 +63,9 @@ orange-desktop/
 │       ├── home/                  #   首页
 │       └── about/                 #   关于页
 │
-├── deno.json                      # Deno 配置 & 任务
-├── package.json                   # npm 依赖声明 (Deno 原生兼容)
+├── deno.json                      # Deno 配置（依赖 + 任务）
 ├── public/                        # 静态资源
 ├── .env.example                   # 环境变量示例
-├── REMOVE_ME.md                   # 模块删除指南
 └── README.md
 ```
 
@@ -84,7 +82,7 @@ orange-desktop/
 deno install
 ```
 
-Deno 会根据 `package.json` 自动解析并安装所有 npm 依赖。
+Deno 会根据 `deno.json` 中的 `imports` 字段自动解析并安装所有 npm 依赖。
 
 ### 2. 开发模式
 
@@ -121,12 +119,81 @@ deno task tauri build
 
 ### 删除模块
 
-详见 [REMOVE_ME.md](./REMOVE_ME.md)，基本步骤：
+每个模块有前端 + 后端两组文件，并可能散布在多处引用。按以下步骤删除任意模块：
 
-1. 删除前端模块目录 `src/modules/xxx/`
-2. 删除后端模块目录 `src-tauri/src/modules/xxx/`
-3. 更新 `src-tauri/src/modules/mod.rs`，注释对应 `pub mod xxx;`
-4. 更新 `src-tauri/src/lib.rs`，移除相关命令注册
+**通用步骤：**
+
+1. 删除前端模块目录
+2. 删除后端模块目录  
+3. 编辑 `src-tauri/src/modules/mod.rs`，移除对应 `pub mod xxx;`
+4. 编辑 `src-tauri/src/lib.rs`，移除对应命令注册
+5. 编辑 `src/core/router/index.ts`，移除对应路由
+6. 编辑 `src/layouts/DefaultLayout.vue`，移除对应侧边栏菜单项
+7. 编辑 `deno.json`，移除该模块依赖的 `imports` 条目
+
+#### 模块：auth（认证）
+
+| 删除目录/文件 | 说明 |
+|---|---|
+| `src/modules/auth/` | 前端：views/stores/api/components |
+| `src-tauri/src/modules/auth/` | 后端：commands/handlers/models/error |
+
+| 编辑文件 | 操作 |
+|---|---|
+| `src-tauri/src/modules/mod.rs` | 删除 `pub mod auth;` |
+| `src-tauri/src/lib.rs` | 删除 `auth::commands::*` 对应的命令注册 |
+| `src/core/router/index.ts` | 删除 `/login`、`/register` 路由 |
+| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 auth 相关菜单项 |
+
+#### 模块：database（数据库）
+
+| 删除目录/文件 | 说明 |
+|---|---|
+| `src/modules/database/` | 前端：views/stores/api |
+| `src-tauri/src/modules/database/` | 后端：commands/connection/models/repositories |
+
+| 编辑文件 | 操作 |
+|---|---|
+| `src-tauri/src/modules/mod.rs` | 删除 `pub mod database;` |
+| `src-tauri/src/lib.rs` | 删除 `database::commands::*` 对应的命令注册 |
+| `src/core/router/index.ts` | 删除 `/data` 路由 |
+| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 database 相关菜单项 |
+
+#### 模块：file_system（文件系统）
+
+| 删除目录/文件 | 说明 |
+|---|---|
+| `src/modules/file_system/` | 前端：views/api |
+| `src-tauri/src/modules/file_system/` | 后端：commands/handlers |
+
+| 编辑文件 | 操作 |
+|---|---|
+| `src-tauri/src/modules/mod.rs` | 删除 `pub mod file_system;` |
+| `src-tauri/src/lib.rs` | 删除 `file_system::commands::*` 对应的命令注册 |
+| `src/core/router/index.ts` | 删除 `/files` 路由 |
+| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 file_system 相关菜单项 |
+
+#### 模块：system（系统信息）
+
+| 删除目录/文件 | 说明 |
+|---|---|
+| `src/modules/system/` | 前端：views/api |
+| `src-tauri/src/modules/system/` | 后端：commands/info |
+
+| 编辑文件 | 操作 |
+|---|---|
+| `src-tauri/src/modules/mod.rs` | 删除 `pub mod system;` |
+| `src-tauri/src/lib.rs` | 删除 `system::commands::*` 对应的命令注册 |
+| `src/core/router/index.ts` | 删除 `/system` 路由 |
+| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 system 相关菜单项 |
+
+#### 可选工具：utils
+
+如果你不需要某些工具函数，也可以局部删除：
+- `src-tauri/src/utils/crypto.rs` — 加密工具（可单独删除）
+- `src-tauri/src/utils/fs.rs` — 文件工具（可单独删除）
+- 删除后更新 `src-tauri/src/utils/mod.rs`，移除对应 `pub mod xxx;`
+- `src-tauri/src/utils/string.rs` 为核心工具，**保留**
 
 ## 路由
 
