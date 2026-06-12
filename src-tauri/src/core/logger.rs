@@ -1,8 +1,10 @@
 use std::io::Write;
 
 /// 简易应用日志器
+#[allow(dead_code)]
 pub struct Logger;
 
+#[allow(dead_code)]
 impl Logger {
     pub fn init() {
         println!("[orange-desktop] Logger initialized");

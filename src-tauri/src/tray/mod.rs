@@ -2,7 +2,6 @@ mod menu;
 mod events;
 
 use tauri::tray::TrayIconBuilder;
-use tauri::Manager;
 
 pub fn setup(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let menu = menu::build_menu(app)?;

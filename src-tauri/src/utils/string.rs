@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 /// 截断字符串
 pub fn truncate(s: &str, max_len: usize) -> &str {
     if s.len() <= max_len {
@@ -7,16 +8,19 @@ pub fn truncate(s: &str, max_len: usize) -> &str {
     }
 }
 
+#[allow(dead_code)]
 /// 去除字符串两端空白
 pub fn trim(s: &str) -> &str {
     s.trim()
 }
 
+#[allow(dead_code)]
 /// 检查字符串是否为空
 pub fn is_empty(s: &str) -> bool {
     s.trim().is_empty()
 }
 
+#[allow(dead_code)]
 /// 转换为蛇形命名 (snake_case)
 pub fn to_snake_case(s: &str) -> String {
     let mut result = String::new();

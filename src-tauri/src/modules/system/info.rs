@@ -2,12 +2,14 @@ use serde::Serialize;
 
 /// 系统信息
 #[derive(Debug, Clone, Serialize)]
+#[allow(dead_code)]
 pub struct SystemInfo {
     pub os: String,
     pub cpu_count: usize,
     pub total_memory_gb: f64,
 }
 
+#[allow(dead_code)]
 impl SystemInfo {
     pub fn gather() -> Self {
         let cpu_count = std::thread::available_parallelism()
