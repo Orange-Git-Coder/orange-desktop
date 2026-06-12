@@ -9,6 +9,7 @@
 | 桌面框架 | Tauri 2.x | Rust 驱动，轻量高效 |
 | 前端 | Vue 3 + TypeScript | Composition API + `<script setup>` |
 | 构建 | Vite 6 | 极速 HMR |
+| UI 框架 | Bootstrap 5.3 | 响应式布局 + 组件库 |
 | 状态管理 | Pinia 3 | Setup Store 语法 |
 | 路由 | Vue Router 5 | 懒加载路由 |
 | 样式 | SCSS | 变量 + 暗黑模式 |
@@ -73,6 +74,12 @@ orange-desktop/
 
 - [Deno](https://deno.com/) >= 2.0
 - [Rust](https://www.rust-lang.org/tools/install) 工具链
+
+## 全局资源
+
+Bootstrap 的 CSS 和 JS 已在 `src/main.ts` 中全局导入，所有组件可直接使用 Bootstrap 类名。
+
+Popper.js（`@popperjs/core`）作为 Bootstrap 的 peer dependency 也已安装，dropdown、tooltip 等组件开箱可用。
 
 ## 快速开始
 
