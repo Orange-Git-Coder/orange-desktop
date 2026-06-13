@@ -1,12 +1,26 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import Pages from "vite-plugin-pages";
 import { fileURLToPath, URL } from "node:url";
 
 const host = Deno.env.get("TAURI_DEV_HOST");
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Pages({
+      dirs: "src/pages",
+      extensions: ["vue"],
+      extendRoute(route) {
+        // 首页默认不使用 layout
+        if (route.path === "/") {
+          return { ...route, meta: { ...route.meta, layout: "default" } }
+        }
+        return route
+      },
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

@@ -44,8 +44,8 @@ const features = ref([
         </h1>
         <p class="hero-subtitle">Tauri + Vue 3 + TypeScript 桌面应用模板</p>
         <div class="hero-actions">
-          <button class="btn btn-primary">开始使用</button>
-          <button class="btn btn-outline">查看文档</button>
+          <el-button type="primary" size="large" round>开始使用</el-button>
+          <el-button size="large" round>查看文档</el-button>
         </div>
       </div>
     </section>
@@ -125,42 +125,6 @@ $gradient-orange: #fa8231;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.btn {
-  padding: 12px 28px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-
-  &-primary {
-    background: linear-gradient(135deg, $gradient-end, $gradient-orange);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.35);
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(245, 87, 108, 0.45);
-    }
-  }
-
-  &-outline {
-    background: transparent;
-    color: #555;
-    border: 2px solid #ddd;
-    @media (prefers-color-scheme: dark) {
-      color: #ccc;
-      border-color: #444;
-    }
-
-    &:hover {
-      border-color: $gradient-orange;
-      color: $gradient-orange;
-    }
-  }
 }
 
 .features {
