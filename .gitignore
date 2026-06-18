@@ -18,6 +18,9 @@ deno.lock
 # Vite cache
 .vite
 
+# Nuxt
+.nuxt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

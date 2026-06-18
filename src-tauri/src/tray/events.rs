@@ -1,9 +1,11 @@
+//! 托盘事件处理
+
 use tauri::{
-    tray::{TrayIconEvent, MouseButton},
-    Manager, AppHandle,
+    tray::{MouseButton, TrayIconEvent},
+    AppHandle, Manager,
 };
 
-/// 处理托盘菜单点击事件
+/// 处理托盘菜单点击
 pub fn handle_menu_event(app: &tauri::AppHandle, event: tauri::menu::MenuEvent) {
     match event.id().as_ref() {
         "show_hide" => {
@@ -23,7 +25,7 @@ pub fn handle_menu_event(app: &tauri::AppHandle, event: tauri::menu::MenuEvent) 
     }
 }
 
-/// 处理托盘图标点击事件（左键显示窗口）
+/// 处理托盘图标点击（左键显示窗口）
 pub fn handle_tray_icon_event(handle: &AppHandle, event: TrayIconEvent) {
     if let TrayIconEvent::Click {
         button: MouseButton::Left,

@@ -1,220 +1,221 @@
-# 🍊 Orange Desktop
+# 🍊 Orange Desktop — Tauri Desktop Starter Template
 
-基于 **Tauri v2** + **Vue 3** + **TypeScript** 的桌面应用框架，采用模块化架构设计，前后端模块一一对应，核心骨架与可选模块分离，可按需裁剪。
+基于 **Tauri v2** + **Vue 3** + **TypeScript** 的桌面应用 Starter Template。
 
 ## 技术栈
 
-| 层 | 技术 | 说明 |
-|---|------|------|
-| 桌面框架 | Tauri 2.x | Rust 驱动，轻量高效 |
-| 前端 | Vue 3 + TypeScript | Composition API + `<script setup>` |
-| 构建 | Vite 6 | 极速 HMR |
-| UI 框架 | Element Plus 2.x | Vue 3 组件库 |
-| 状态管理 | Pinia 3 | Setup Store 语法 |
-| 路由 | Vue Router 5 | 懒加载路由 |
-| 样式 | SCSS | 变量 + 暗黑模式 |
-| HTTP | Axios | 请求/响应拦截器 |
-| 运行时 | Deno 2 | 零配置 TypeScript，原生 npm 兼容 |
+| 层       | 技术               | 用途                     |
+| -------- | ------------------ | ------------------------ |
+| 桌面框架 | Tauri 2.x          | Rust 驱动，轻量高效      |
+| 前端     | Vue 3 + TypeScript | Composition API           |
+| 构建     | Vite 7             | 极速 HMR                 |
+| 样式     | SCSS               | 模块化样式               |
+| 状态管理 | Pinia 3            | Setup Store 语法         |
+| 路由     | Vue Router 5       | 懒加载路由               |
+| HTTP     | axios              | 拦截器 + 请求封装        |
+| 运行时   | Deno 2             | 零配置 TypeScript        |
+| 后端     | Rust               | Tauri Command + Service  |
 
-## 项目结构
+## 目录结构
 
 ```
 orange-desktop/
-├── src-tauri/                     # 🦀 Rust 后端
-│   └── src/
-│       ├── core/                  # 🔥 核心骨架（永不删除）
-│       │   ├── app_state.rs       #   全局状态
-│       │   ├── error.rs           #   错误类型
-│       │   └── logger.rs          #   日志器
-│       ├── modules/               # 🧩 可选模块（按需保留/删除）
-│       │   ├── auth/              #   认证模块
-│       │   ├── database/          #   数据库模块
-│       │   ├── file_system/       #   文件系统模块
-│       │   └── system/            #   系统信息模块
-│       ├── utils/                 # 🛠️ 工具函数
-│       │   ├── crypto.rs          #   加密工具（可选）
-│       │   ├── fs.rs              #   文件工具（可选）
-│       │   └── string.rs          #   字符串工具（核心）
-│       ├── tray/                  #   托盘图标
-│       │   ├── mod.rs             #     主入口
-│       │   ├── menu.rs            #     菜单构建
-│       │   └── events.rs          #     事件处理
-│       └── lib.rs                 #   入口点
 │
-├── src/                           # 💚 Vue 3 前端
-│   ├── core/                      # 🔥 核心骨架（永不删除）
-│   │   ├── router/                #   路由配置
-│   │   ├── stores/                #   全局 Store
-│   │   ├── utils/                 #   工具函数 (request + format)
-│   │   ├── composables/           #   组合式函数 (useTheme)
-│   │   ├── styles/                #   全局样式 + 变量
-│   │   └── types/                 #   全局类型定义
-│   ├── modules/                   # 🧩 可选模块（与后端一一对应）
-│   │   ├── auth/                  #   views/ stores/ api/ components/
-│   │   ├── database/              #   views/ stores/ api/
-│   │   ├── file_system/           #   views/ api/
-│   │   └── system/                #   views/ api/
-│   ├── components/                # 公共组件
-│   │   ├── base/                  #   基础组件 (Button, Input, Modal, Table)
-│   │   └── business/              #   业务组件 (PageHeader)
-│   ├── layouts/                   # 布局组件
-│   │   ├── DefaultLayout.vue      #   默认布局（侧边栏 + 内容）
-│   │   └── BlankLayout.vue        #   空白布局（登录页等）
-│   └── views/                     # 核心页面
-│       ├── home/                  #   首页
-│       └── about/                 #   关于页
+├── src/                              # Vue 3 前端
+│   ├── router/index.ts               # 路由配置（懒加载 modules）
+│   ├── stores/app.ts                 # 全局状态（主题 / 侧边栏）
+│   ├── utils/
+│   │   ├── format.ts                 # 格式化工具
+│   │   └── request.ts                # axios 请求封装（拦截器）
+│   ├── types/global.d.ts            # 全局类型
+│   ├── constants/index.ts            # 全局常量
+│   ├── layouts/
+│   │   ├── default.vue               # 默认布局（侧边栏 + 主内容）
+│   │   └── blank.vue                 # 空白布局
+│   ├── components/base/              # 全局 UI 组件
+│   ├── modules/                      # 业务模块
+│   │   └── home/pages/index.vue      # 首页（展示页）
+│   ├── app.vue
+│   └── main.ts
 │
-├── deno.json                      # Deno 配置（依赖 + 任务）
-├── public/                        # 静态资源
-├── .env.example                   # 环境变量示例
+├── src-tauri/src/                    # Rust 后端
+│   ├── main.rs                       # 启动入口
+│   ├── lib.rs                        # 模块注册
+│   ├── error.rs                      # 统一错误处理
+│   ├── state.rs                      # 全局状态
+│   ├── commands/                     # Tauri Command 层
+│   │   ├── auth.rs                   # 鉴权命令（greet）
+│   │   ├── file.rs                   # 文件命令
+│   │   └── system.rs                 # 系统命令
+│   ├── services/                     # 业务逻辑层
+│   │   ├── file_service.rs
+│   │   └── system_service.rs
+│   ├── models/                       # 数据模型
+│   │   └── file.rs
+│   └── tray/                         # 系统托盘
+│
+├── public/                           # 静态资源
+├── deno.json                         # Deno 配置
+├── tsconfig.json                     # TypeScript 配置
+├── vite.config.ts                    # Vite 配置
 └── README.md
 ```
 
-## 环境要求
+## 目录职责
 
-- [Deno](https://deno.com/) >= 2.0
-- [Rust](https://www.rust-lang.org/tools/install) 工具链
+| 目录          | 职责                                     |
+| ------------- | ---------------------------------------- |
+| `router/`     | 仅放路由配置                             |
+| `stores/`     | 仅放全局状态（主题、侧边栏）             |
+| `utils/`      | 仅放通用工具函数                         |
+| `types/`      | 仅放跨模块共享类型                       |
+| `constants/`  | 仅放跨模块共享常量                       |
+| `layouts/`    | 仅放布局组件                             |
+| `components/` | 仅放全局 UI 组件                         |
+| `modules/`    | 所有业务功能，每个模块一个目录，零耦合   |
+| `commands/`   | Tauri Command —— 接收前端调用 → 转发 Service |
+| `services/`   | 业务逻辑 —— 可被多个 Command 复用        |
+| `models/`     | 纯数据结构，不含业务逻辑                 |
+| `tray/`       | 系统托盘                                 |
+| `error.rs`    | 统一错误类型                             |
+| `state.rs`    | 全局共享状态                             |
 
 ## 快速开始
 
-### 1. 安装依赖
-
 ```bash
+# 1. 安装依赖
 deno install
-```
 
-Deno 会根据 `deno.json` 中的 `imports` 字段自动解析并安装所有 npm 依赖。
-
-### 2. 开发模式
-
-```bash
+# 2. 开发模式
 deno task tauri dev
-```
 
-同时启动 Vite 开发服务器（前端热更新）和 Tauri 桌面窗口。
-
-### 3. 生产构建
-
-```bash
+# 3. 生产构建
 deno task tauri build
 ```
 
-构建产物位于 `src-tauri/target/release/bundle/`。
+## 模块开发规范
 
-## 可用任务
+### 模块结构
 
-| 命令 | 说明 |
-|------|------|
-| `deno task dev` | 启动 Vite 开发服务器 |
-| `deno task build` | 类型检查 + 生产构建 |
-| `deno task preview` | 预览生产构建 |
-| `deno task tauri dev` | Tauri 开发模式 |
-| `deno task tauri build` | Tauri 生产构建 |
+```
+modules/<module_name>/
+├── pages/          # 页面组件（必选）
+├── components/     # 模块内部组件
+├── api.ts          # 网络请求
+├── store.ts        # 模块状态
+├── types.ts        # 模块类型
+├── constants.ts    # 模块常量
+├── utils.ts        # 模块工具
+└── index.ts        # 入口，对外暴露公共 API
+```
 
-## 模块管理
+### 模块引用规则
 
-项目采用 **核心 + 可选模块** 架构：
+```
+✅ 允许：modules/order → @/utils/format   （引用全局工具）
+❌ 禁止：modules/order → ../user/store   （跨模块引用）
+```
 
-- `core/` —— 核心骨架，**永不删除**，包含路由、Store、HTTP 请求、全局样式等基础设施
-- `modules/` —— 可选业务模块，**按需保留或删除**
+### 新增模块流程（前端）
+
+```
+1. mkdir src/modules/download/pages
+2. 创建页面 src/modules/download/pages/index.vue
+3. 在 router/index.ts 添加路由
+4. 在 layouts/default.vue 的 navItems 添加导航项
+```
+
+### 新增模块流程（后端）
+
+```
+1. 创建 Service：src-tauri/src/services/download_service.rs
+2. 注册 Service：编辑 services/mod.rs，添加 pub mod download_service;
+3. 创建 Command：src-tauri/src/commands/download.rs
+4. 注册 Command：编辑 commands/mod.rs，添加 pub mod download;
+5. 注册 handler：编辑 lib.rs，在 generate_handler![] 中添加
+```
 
 ### 删除模块
 
-每个模块有前端 + 后端两组文件，并可能散布在多处引用。按以下步骤删除任意模块：
+```
+1. 删除前端目录 rm -rf src/modules/download/
+2. 移除路由和导航
+3. 删除后端 Command + Service
+4. 编辑 commands/mod.rs、services/mod.rs、lib.rs 移除对应行
+```
 
-**通用步骤：**
+## 命名规范
 
-1. 删除前端模块目录
-2. 删除后端模块目录  
-3. 编辑 `src-tauri/src/modules/mod.rs`，移除对应 `pub mod xxx;`
-4. 编辑 `src-tauri/src/lib.rs`，移除对应命令注册
-5. 编辑 `src/core/router/index.ts`，移除对应路由
-6. 编辑 `src/layouts/DefaultLayout.vue`，移除对应侧边栏菜单项
-7. 编辑 `deno.json`，移除该模块依赖的 `imports` 条目
+| 类型        | 规范       | 示例              |
+| ----------- | ---------- | ----------------- |
+| 目录        | snake_case | `file/`           |
+| Vue 组件    | PascalCase | `FileList.vue`    |
+| TS 文件     | 简短名     | `api.ts` `store.ts` |
+| Rust 文件   | snake_case | `file_service.rs` |
+| 路由 path   | kebab-case | `/user-profile`   |
+| 路由 name   | camelCase  | `userProfile`     |
+| TS 变量     | camelCase  | `userName`        |
+| Rust 函数   | snake_case | `file_list`       |
+| Pinia Store | `use` + PascalCase + `Store` | `useFileStore` |
 
-#### 模块：auth（认证）
+## 架构规范
 
-| 删除目录/文件 | 说明 |
-|---|---|
-| `src/modules/auth/` | 前端：views/stores/api/components |
-| `src-tauri/src/modules/auth/` | 后端：commands/handlers/models/error |
+### Rust 分层
 
-| 编辑文件 | 操作 |
-|---|---|
-| `src-tauri/src/modules/mod.rs` | 删除 `pub mod auth;` |
-| `src-tauri/src/lib.rs` | 删除 `auth::commands::*` 对应的命令注册 |
-| `src/core/router/index.ts` | 删除 `/login`、`/register` 路由 |
-| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 auth 相关菜单项 |
+```
+前端 invoke("command_name")  →  commands/*.rs  （接收 + 转发）
+                                     ↓
+                               services/*.rs  （业务逻辑）
+                                     ↓
+                               System API / 文件系统
+```
 
-#### 模块：database（数据库）
+- **Command** 严禁写业务逻辑，只做参数接收和转发
+- **Service** 不依赖 Tauri 类型，纯 Rust，方便测试
+- **错误** 统一用 `AppError`，Command 层转为 `String` 返回
 
-| 删除目录/文件 | 说明 |
-|---|---|
-| `src/modules/database/` | 前端：views/stores/api |
-| `src-tauri/src/modules/database/` | 后端：commands/connection/models/repositories |
+### 状态管理
 
-| 编辑文件 | 操作 |
-|---|---|
-| `src-tauri/src/modules/mod.rs` | 删除 `pub mod database;` |
-| `src-tauri/src/lib.rs` | 删除 `database::commands::*` 对应的命令注册 |
-| `src/core/router/index.ts` | 删除 `/data` 路由 |
-| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 database 相关菜单项 |
+| 层级   | 位置               | 示例          | 范围       |
+| ------ | ------------------ | ------------- | ---------- |
+| 全局   | `stores/app.ts`    | `useAppStore` | 所有模块   |
+| 模块级 | `modules/*/store.ts` | `useFileStore` | 仅本模块 |
 
-#### 模块：file_system（文件系统）
+### axios 请求
 
-| 删除目录/文件 | 说明 |
-|---|---|
-| `src/modules/file_system/` | 前端：views/api |
-| `src-tauri/src/modules/file_system/` | 后端：commands/handlers |
+```
+页面 → store.ts → api.ts → @/utils/request.ts → axios 实例
+```
 
-| 编辑文件 | 操作 |
-|---|---|
-| `src-tauri/src/modules/mod.rs` | 删除 `pub mod file_system;` |
-| `src-tauri/src/lib.rs` | 删除 `file_system::commands::*` 对应的命令注册 |
-| `src/core/router/index.ts` | 删除 `/files` 路由 |
-| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 file_system 相关菜单项 |
+- **api.ts**：仅定义请求函数
+- **store.ts**：调用 api.ts，管理状态和缓存
+- **request.ts**：axios 实例 + 拦截器 + 错误处理
 
-#### 模块：system（系统信息）
+## 依赖说明
 
-| 删除目录/文件 | 说明 |
-|---|---|
-| `src/modules/system/` | 前端：views/api |
-| `src-tauri/src/modules/system/` | 后端：commands/info |
+### deno.json
 
-| 编辑文件 | 操作 |
-|---|---|
-| `src-tauri/src/modules/mod.rs` | 删除 `pub mod system;` |
-| `src-tauri/src/lib.rs` | 删除 `system::commands::*` 对应的命令注册 |
-| `src/core/router/index.ts` | 删除 `/system` 路由 |
-| `src/layouts/DefaultLayout.vue` | 删除侧边栏中 system 相关菜单项 |
+| 依赖                     | 用途                    |
+| ------------------------ | ----------------------- |
+| `@tauri-apps/api`        | Tauri IPC               |
+| `@tauri-apps/plugin-opener` | 系统默认应用打开     |
+| `pinia`                  | 状态管理                |
+| `vue`                    | 前端框架                |
+| `vue-router`             | 路由                    |
+| `sass`                   | SCSS 编译               |
+| `axios`                  | HTTP 请求（拦截器）     |
+| `vite` / `@vitejs/plugin-vue` | 构建工具         |
+| `@tauri-apps/cli`        | Tauri CLI              |
+| `typescript`             | 类型检查                |
 
-#### 可选工具：utils
+### Cargo.toml
 
-如果你不需要某些工具函数，也可以局部删除：
-- `src-tauri/src/utils/crypto.rs` — 加密工具（可单独删除）
-- `src-tauri/src/utils/fs.rs` — 文件工具（可单独删除）
-- 删除后更新 `src-tauri/src/utils/mod.rs`，移除对应 `pub mod xxx;`
-- `src-tauri/src/utils/string.rs` 为核心工具，**保留**
-
-## 路由
-
-| 路径 | 页面 | 组件 |
-|------|------|------|
-| `/` | 首页 | `views/home/index.vue` |
-| `/login` | 登录 | `modules/auth/views/Login.vue` |
-| `/register` | 注册 | `modules/auth/views/Register.vue` |
-| `/data` | 数据管理 | `modules/database/views/DataManager.vue` |
-| `/files` | 文件浏览 | `modules/file_system/views/FileExplorer.vue` |
-| `/system` | 系统信息 | `modules/system/views/SystemInfo.vue` |
-| `/about` | 关于 | `views/about/index.vue` |
-
-## 推荐 IDE
-
-- [VS Code](https://code.visualstudio.com/)
-  - [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
-  - [Deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
-  - [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode)
-  - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+| Crate                | 用途                     |
+| -------------------- | ------------------------ |
+| `tauri`              | Tauri 核心               |
+| `tauri-plugin-opener` | 系统默认应用打开         |
+| `serde` / `serde_json` | 序列化                 |
+| `tauri-build`        | 构建工具                 |
 
 ## License
 

@@ -1,5 +1,0 @@
-export { default as Login } from "./views/Login.vue"
-export { default as Register } from "./views/Register.vue"
-export { default as UserAvatar } from "./components/UserAvatar.vue"
-export { useUserStore } from "./stores/user"
-export * from "./api"

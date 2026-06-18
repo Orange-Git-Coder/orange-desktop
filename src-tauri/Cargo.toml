@@ -1,25 +1,27 @@
 [package]
 name = "orange-desktop"
 version = "0.1.0"
-description = "A Tauri Desktop Application"
+description = "A Tauri Desktop Starter Template"
 authors = ["you"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "orange_desktop_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+# ==================== 构建依赖 ====================
 [build-dependencies]
+# Tauri 构建工具 —— 编译时资源处理
 tauri-build = { version = "2", features = [] }
 
+# ==================== 运行时依赖 ====================
 [dependencies]
+# Tauri 核心框架 —— 桌面窗口 + IPC 通信
 tauri = { version = "2", features = ["tray-icon"] }
+
+# Tauri 插件：打开 URL/文件 —— 系统默认应用
 tauri-plugin-opener = "2"
+
+# Serde 序列化/反序列化 —— Command 参数与返回值
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-
